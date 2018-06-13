@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>变形测试</title>
+		<script src="lib/jquery-2.1.1.min.js"></script>
+		<script src="lib/pixi.min.js"></script>
+		<script src="lib/TweenMax.min.js"></script>
+		<script src="lib/mathutils.js"></script>
+	</head>
+
+	<body>
+
+	</body>
+
+</html>
+
+<script>
+	var row = 5;
+	var col = 5;
+
+	var targetX = 300;
+	var targetY = 300;
+
+	var ball;
+	var dis;
+	var angle;
+
+	var planeArr = [];
+	var moArr = [];
+
+	var app = new PIXI.Application();
+	document.body.appendChild(app.view);
+
+	var stage = app.stage;
+	var container = new PIXI.Container();
+	stage.addChild(container);
+
+	var plane;
+	var mo;
+
+	var loader = new PIXI.loaders.Loader();
+	loader.add(['images/motty.jpg']);
+	loader.add(['images/mo.png']);
+	loader.once('complete', onLoaded);
+	loader.load();
+
+	function onLoaded() {
+		var bg = new PIXI.Graphics();
+		bg.beginFill(0xFF700B, 1);
+		bg.drawRect(0, 0, 1000, 1000);
+		container.addChild(bg);
+
+		plane = new PIXI.mesh.Plane(new PIXI.Texture.fromImage('images/motty.jpg'), 5, 5);
+		container.addChild(plane);
+		plane.x = 0;
+		plane.y = 0;
+
+		mo = new PIXI.mesh.Plane(new PIXI.Texture.fromImage('images/mo.png'), 5, 5);
+		container.addChild(mo);
+		mo.x = 0;
+		mo.y = 0;
+
+		initPlane();
+		initMo();
+
+		setVerPlane();
+		//setVerMo();
+	}
+
+	function initPlane() {
+		for(var i = 0; i < 5; i++) {
+			for(var j = 0; j < 5; j++) {
+				var dot = creatBall();
+				container.addChild(dot);
+				/*var dot = {
+					x: 0,
+					y: 0
+				};*/
+				dot.x = j * (plane.width / (5 - 1)) + 0;
+				dot.y = i * (plane.height / (5 - 1)) + 0;
+				planeArr.push(dot);
+				//dot.alpha = 1;
+			}
+		}
+	}
+
+	function initMo() {
+		for(var i = 0; i < 5; i++) {
+			for(var j = 0; j < 5; j++) {
+				var dot = creatBall();
+				container.addChild(dot);
+				/*var dot = {
+					x: 0,
+					y: 0
+				};*/
+				dot.x = j * (mo.width / (5 - 1)) + 0;
+				dot.y = i * (mo.height / (5 - 1)) + 0;
+				moArr.push(dot);
+				//dot.alpha = 1;
+			}
+		}
+	}
+
+	function setVerPlane() {
+		var num = 0;
+
+		for(var i = 0; i < planeArr.length; i++) {
+			var temp = planeArr[i];
+			plane.vertices[num] = temp.x;
+			num++;
+			plane.vertices[num] = temp.y;
+			num++;
+		}
+	}
+
+	function setVerMo() {
+		var num = 0;
+
+		for(var i = 0; i < planeArr.length; i++) {
+			var temp = planeArr[i];
+			mo.vertices[num] = temp.x;
+			num++;
+			mo.vertices[num] = temp.y;
+			num++;
+		}
+	}
+
+	function creatBall() {
+		var g = new PIXI.Graphics();
+		g.beginFill(0xff0022);
+		g.drawCircle(0, 0, 10);
+		g.endFill();
+		return g;
+	}
+</script>

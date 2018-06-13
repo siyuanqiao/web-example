@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>变形测试</title>
+		<script src="lib/jquery-2.1.1.min.js"></script>
+		<script src="lib/pixi.min.js"></script>
+		<script src="lib/TweenMax.min.js"></script>
+		<script src="lib/mathutils.js"></script>
+		<script src="js/PlaneMesh.js"></script>
+		<script src="lib/dat.gui.js"></script>
+	</head>
+
+	<body>
+
+	</body>
+
+</html>
+
+<script>
+	var gui;
+
+	var row = 50;
+	var col = 50;
+
+	var targetX = 300;
+	var targetY = 300;
+
+	var dotArr = [];
+
+	var ball;
+	var dis;
+	var angle;
+
+	var app = new PIXI.Application();
+	document.body.appendChild(app.view);
+
+	var stage = app.stage;
+	var container = new PIXI.Container();
+	stage.addChild(container);
+
+	var plane;
+	var mo;
+
+	var loader = new PIXI.loaders.Loader();
+	loader.add(['images/motty.jpg']);
+	loader.add(['images/mo.png']);
+	loader.once('complete', onLoaded);
+	loader.load();
+
+	function onLoaded() {
+		var bg = new PIXI.Graphics();
+		bg.beginFill(0xFF700B, 1);
+		bg.drawRect(0, 0, 1000, 1000);
+		container.addChild(bg);
+
+		plane = new PlaneMesh(PIXI.Texture.fromImage("images/motty.jpg"), row, col);
+		container.addChild(plane);
+		plane.x = 0;
+		plane.y = 0;
+		plane.alpha = 1;
+
+		mo = new PlaneMesh(PIXI.Texture.fromImage("images/mo.png"), row, col);
+		container.addChild(mo);
+		mo.x = 200;
+		mo.y = 0;
+		mo.alpha = 1;
+
+		initGui();
+	}
+
+	function initGui() {
+		var Options = function() {
+			//进入到指定点
+			this.transformIn = function() {
+				var targetX = Math.random() * stage.width;
+				var targetY = Math.random() * stage.height;
+				mo.transformIn({
+					targetX: targetX,
+					targetY: targetY,
+					baseTime: 400,
+					moveTime: 1.0,
+					ease: Cubic.easeInOut,
+					onComplete: function() {
+						console.log('移动完毕！');
+					}
+				});
+			}
+
+			//从指定点出来
+			this.transformOut = function() {
+				var targetX = Math.random() * stage.width;
+				var targetY = Math.random() * stage.height;
+
+				mo.transformOut({
+					initX: targetX,
+					initY: targetY,
+					baseTime: 500,
+					moveTime: 0.8,
+					ease: Back.easeOut,
+					onComplete: function() {
+						console.log('移动完毕！');
+					}
+				});
+			}
+
+			//漩涡进一个点
+			this.spireIn = function() {
+				var targetX = Math.random() * plane.width + plane.x;
+				var targetY = Math.random() * plane.height + plane.y;
+
+				plane.spireIn({
+					targetX: targetX,
+					targetY: targetY,
+					baseTime: 800,
+					delayTime: 400,
+					angleSpeed: 8,
+					distSpeed: 5
+				});
+			}
+
+			//波形进入
+			this.ziziIn = function() {
+				mo.ziziIn({
+					speed: 3,
+					distance: 200,
+					onComplete: function() {
+						console.log('扭动结束');
+					}
+				});
+			}
+
+			this.reset = function() {
+				if(mo) {
+					container.removeChild(mo);
+					mo = null;
+				}
+
+				mo = new PlaneMesh(PIXI.Texture.fromImage("images/mo.png"), row, col);
+				container.addChild(mo);
+				mo.x = 200;
+				mo.y = 0;
+				mo.alpha = 1;
+			}
+		}
+
+		var options = new Options();
+		gui = new dat.GUI();
+		gui.add(options, 'transformIn');
+		gui.add(options, 'transformOut');
+		gui.add(options, 'spireIn');
+		gui.add(options, 'ziziIn');
+		gui.add(options, 'reset');
+	}
+</script>

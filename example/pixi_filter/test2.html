@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="css/common.css" />
+		<title>PIXI滤镜-Glitch效果</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+
+		<script src="lib/jquery-2.1.1.min.js"></script>
+		<script src="lib/pixi.min.js"></script>
+		<!--<script src="https://pixijs.download/dev/pixi.min.js"></script>-->
+		<script src="lib/vconsole.min.js"></script>
+
+		<script>
+			(function(doc, win) {
+				var docEl = doc.documentElement,
+					resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+					recalc = function() {
+						var clientWidth = docEl.clientWidth;
+						if(!clientWidth) return;
+						if(clientWidth >= 640) {
+							docEl.style.fontSize = '100px';
+						} else {
+							docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+						}
+					};
+
+				if(!doc.addEventListener) return;
+				win.addEventListener(resizeEvt, recalc, false);
+				doc.addEventListener('DOMContentLoaded', recalc, false);
+			})(document, window);
+		</script>
+
+	</head>
+
+	<body>
+		<script src="lib/pixi-filters.js"></script>
+		<script>
+			var vconsole = new VConsole();
+
+			var app = new PIXI.Application(window.innerWidth, window.innerHeight, {
+				backgroundColor: 0x000000
+			});
+			document.body.appendChild(app.view);
+
+			var stage = app.stage;
+			var container = new PIXI.Sprite();
+			stage.addChild(container);
+
+			var bg = new PIXI.Graphics();
+			bg.beginFill(0x000000, 1);
+			bg.drawRect(0, 0, window.innerWidth, window.innerHeight);
+			container.addChild(bg);
+
+			var txt = new PIXI.Text('LOADING....', {
+				fontFamily: 'Arial',
+				fontSize: 24,
+				fill: 0xffffff,
+				align: 'center'
+			});
+			container.addChild(txt);
+			txt.anchor.set(0.5);
+			txt.x = app.view.width / 2;
+			txt.y = app.view.height / 2;
+
+			var filterArr = []; //滤镜数组
+
+			//旧电影滤镜
+			var filter = new PIXI.filters.OldFilmFilter();
+			//container.filters = [filter];
+			filter.seed = 1;
+			filter.sepia = 0;
+			filter.scratch = 1;
+			filter.vignetting = 0;
+			//filterArr.push(filter);
+
+			//干扰滤镜
+			var glitchFilter = new PIXI.filters.GlitchFilter();
+			glitchFilter.slices = 20;
+			glitchFilter.red = [20, 0];
+			glitchFilter.blue = [30, 0];
+			glitchFilter.green = [40, 0];
+			//filterArr.push(glitchFilter);
+
+			container.filters = filterArr;
+
+			var num = 0;
+			var isGlitch = false;
+
+			setInterval(function() {
+				num = 30;
+				isGlitch = true;
+				filterArr.push(glitchFilter);
+				container.filters = filterArr;
+			}, 2000);
+
+			app.start();
+
+			app.ticker.add(function(delta) {
+				filter.seed = Math.random();
+				if(isGlitch) {
+					glitchFilter.seed = Math.random();
+					var offset = 50 - Math.random() * 100;
+					glitchFilter.offset = offset;
+					glitchFilter.direction = Math.random() * 180;
+					num--;
+					if(num <= 0) {
+						num = 0;
+						isGlitch = false;
+						filterArr.pop();
+						container.filters = filterArr;
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

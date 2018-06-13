@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>粒子效果</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+    </style>
+</head>
+<body>
+
+</body>
+</html>
+<script src="../libs/tween/TweenMax.min.js"></script>
+<script src="../libs/pixi/pixi-4.5.1.min.js"></script>
+<script>
+    var renderer,stage,view;
+    var stageWidth=640,stageHeight;
+    function initPIXI(){
+        var winWidth=document.documentElement.clientWidth||document.body.clientWidth;
+        var winHeight=document.documentElement.clientHeight||document.body.clientHeight;
+        stageHeight=(stageWidth*winHeight)/winWidth;
+
+        renderer = new PIXI.Application({
+            width:stageWidth,
+            height:stageHeight,
+        });
+
+        stage = new PIXI.Container();
+        renderer.stage.addChild(stage);
+
+        view=renderer.view;
+        view.style.width=winWidth+'px';
+        view.style.height=winHeight+'px';
+        document.body.appendChild(view);
+
+        addParticle();
+
+        addStar();
+
+        animate();
+    }
+
+    function addStar(){
+        var starContainer=new PIXI.Container();
+        for(var i=0;i<12;i++){
+            var p = PIXI.Sprite.fromImage("star.png");
+            p.anchor.set(0.5);
+            var scale=Math.random();
+            p.scale.set(scale+0.2);
+
+            var angle=(Math.random()*360);
+            //正弦 0-90-180-270-360
+            //   (0 1  0  1     0)
+            p.x = Math.sin(Math.PI/180*angle)*(Math.random()*randiusX);
+            p.y = Math.cos(Math.PI/180*angle)*(Math.random()*randiusY);
+
+            TweenMax.to(p,2+scale*2,{rotation:Math.PI/180*360,repeat:-1,ease:Linear.easeNone});
+
+            starContainer.addChild(p);
+        }
+        stage.addChild(starContainer);
+        starContainer.x=stageWidth/2;
+        starContainer.y=500;
+    }
+
+    var ps=[],
+        pc;
+    var randiusX=300;
+    var randiusY=100;
+    function addParticle()
+    {
+        pc = new PIXI.ParticleContainer(10000, {
+            scale: true,
+            position: true,
+            //rotation: true,
+            //uvs: true,
+            alpha: true
+        });
+        stage.addChild(pc);
+        pc.x=stageWidth/2;
+        pc.y=500;
+
+        for (var i = 0; i < 150; ++i)
+        {
+            var p = PIXI.Sprite.fromImage("particle.png");
+            p.anchor.set(0.5);
+            p.scale.set((Math.random()+1));
+            p.alpha=Math.random();
+
+            var angle=(Math.random()*360);
+            p.x = Math.sin(Math.PI/180*angle)*(Math.random()*randiusX);
+            p.y = Math.cos(Math.PI/180*angle)*(Math.random()*randiusY);
+
+            p.Xspeed=Math.random() *2-1;
+            p.Yspeed=Math.random() *2-1;
+            p.Aspeed=0.005+Math.random()*0.02;
+
+            ps.push(p);
+            pc.addChild(p);
+        }
+    }
+
+    function updateParticle()
+    {
+        //console.log(angle,Math.sin(Math.PI/180*angle++));
+        for (var i = 0; i < ps.length; i++)
+        {
+            var p = ps[i];
+            p.alpha -= p.Aspeed;
+            p.x+=p.Xspeed;
+            p.y+=p.Yspeed;
+
+            if(p.alpha<=0) {
+                var angle=(Math.random()*360);
+                p.x = Math.sin(Math.PI/180*angle)*(Math.random()*randiusX);
+                p.y = Math.cos(Math.PI/180*angle)*(Math.random()*randiusY);
+                p.alpha=1;
+            }
+        }
+    }
+
+    function animate(){
+        requestAnimationFrame(animate);
+        renderer.render(stage);
+        updateParticle();
+    };
+
+
+    initPIXI();
+</script>

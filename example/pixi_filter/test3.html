@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="css/common.css" />
+		<title>PIXI滤镜-模糊效果</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+
+		<script src="lib/jquery-2.1.1.min.js"></script>
+		<script src="lib/pixi.min.js"></script>
+		<script src="lib/pixi-filters.js"></script>
+		<script src="lib/TweenMax.min.js"></script>
+		<script src="lib/vconsole.min.js"></script>
+		<script src="lib/mathutils.js"></script>
+
+		<script>
+			(function(doc, win) {
+				var docEl = doc.documentElement,
+					resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+					recalc = function() {
+						var clientWidth = docEl.clientWidth;
+						if(!clientWidth) return;
+						if(clientWidth >= 640) {
+							docEl.style.fontSize = '100px';
+						} else {
+							docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+						}
+					};
+
+				if(!doc.addEventListener) return;
+				win.addEventListener(resizeEvt, recalc, false);
+				doc.addEventListener('DOMContentLoaded', recalc, false);
+			})(document, window);
+		</script>
+
+	</head>
+
+	<body>
+		<div id="pixiStage">
+		</div>
+
+		<script>
+			var vconsole = new VConsole();
+
+			var wid = window.innerWidth;
+			var hei = window.innerHeight;
+
+			var arr = [];
+
+			var baseZ = 10;
+
+			var zoomArr = [0.2, 0.4, 0.6, 0.8, 1];
+			var xyArr = [{
+					initX: -800,
+					initY: -1200,
+					x: 150,
+					y: 250
+				},
+				{
+					initX: 2000,
+					initY: 3500,
+					x: 500,
+					y: 900
+				},
+				{
+					initX: 2000,
+					initY: -3000,
+					x: 550,
+					y: 200
+				},
+				{
+					initX: -1800,
+					initY: 0,
+					x: 50,
+					y: 500
+				},
+				{
+					initX: 1000,
+					initY: 0,
+					x: 400,
+					y: 400
+				},
+			];
+
+			var app = new PIXI.Application(640, 640 / (wid / hei), {
+				backgroundColor: 0x000000
+			});
+			document.getElementById('pixiStage').appendChild(app.view);
+
+			var stage = app.stage;
+			var container = new PIXI.Container();
+
+			stage.addChild(container);
+
+			app.stop();
+
+			var loader = new PIXI.loaders.Loader();
+			loader.add('bunny', 'images/man.png');
+			loader.once('complete', onLoaded);
+			loader.load();
+
+			function onLoaded() {
+				var __time = 0.2;
+				var __num = 1.0 + __time * 5;
+				for(var i = 0; i < 5; i++) {
+					var bunny = new PIXI.Sprite.fromFrame('bunny');
+					container.addChild(bunny);
+					bunny.anchor.set(0.5);
+					bunny.x = xyArr[i].initX;
+					bunny.y = xyArr[i].initY;
+					bunny.z = zoomArr[i] + 0;
+					bunny.alpha = 0;
+					bunny.scale.set(bunny.z + 10);
+					arr.push(bunny);
+
+					/*var blurFilter = new PIXI.filters.BlurFilter();
+					blurFilter.blur = (1 - bunny.z) * 10;
+					bunny.filters = [blurFilter];*/
+
+					TweenMax.to(bunny.scale, __num, {
+						x: bunny.z,
+						y: bunny.z,
+						delay: __time * i + 0.2,
+						ease:Expo.easeOut
+					});
+
+					TweenMax.to(bunny, __num, {
+						alpha: 1,
+						x: xyArr[i].x,
+						y: xyArr[i].y,
+						delay: __time * i + 0.2,
+						ease:Expo.easeOut
+					});
+
+					__num -= __time;
+				}
+
+				app.start();
+
+			}
+
+			app.ticker.add(function(delta) {
+				for(var i = 0; i < arr.length; i++) {
+					var temp = arr[i];
+					var blurFilter = new PIXI.filters.BlurFilter();
+					blurFilter.blur = (1 - temp.scale.x) * 10;
+					temp.filters = [blurFilter];
+				}
+			});
+		</script>
+	</body>
+
+</html>

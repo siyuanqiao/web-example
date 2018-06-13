@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>拼字</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<script src="libs/jquery-2.1.1.min.js"></script>
+		<script src="libs/pixi.min.js"></script>
+		<script src="libs/TweenMax.min.js"></script>
+		<script src="libs/common.min.js"></script>
+
+		<script>
+			(function(doc, win) {
+				var docEl = doc.documentElement,
+					resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+					recalc = function() {
+						var clientWidth = docEl.clientWidth;
+						if(!clientWidth) return;
+						if(clientWidth >= 640) {
+							docEl.style.fontSize = '100px';
+						} else {
+							docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+						}
+					};
+
+				if(!doc.addEventListener) return;
+				win.addEventListener(resizeEvt, recalc, false);
+				doc.addEventListener('DOMContentLoaded', recalc, false);
+			})(document, window);
+		</script>
+
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			
+			#pixiStage {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+			
+			#pixiStage canvas {
+				width: 100%;
+				height: auto;
+			}
+			
+			#txt {
+				position: absolute;
+				width: 200px;
+				font-size: 24px;
+				z-index: 999;
+			}
+			
+			#btn,
+			#btn2,
+			#btn3,
+			#btn4 {
+				position: absolute;
+				width: 100px;
+				height: 30px;
+				z-index: 999;
+				left: 220px;
+			}
+			
+			#btn2 {
+				top: 50px;
+			}
+			
+			#btn3 {
+				top: 50px;
+				left: 110px;
+			}
+			
+			#btn4 {
+				top: 50px;
+				left: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="pixiStage">
+		</div>
+
+		<input type="text" id="txt" maxlength="1" />
+		<button id="btn">确定</button>
+		<button id="btn2">倒计时</button>
+		<button id="btn3">画图形</button>
+		<button id="btn4">二维码</button>
+
+		<script src="js/PfPos.js"></script>
+		<script>
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+
+			var app = new PIXI.Application(width, height, {
+				transparent: true,
+				antialias: true
+			});
+			document.getElementById('pixiStage').appendChild(app.view);
+
+			var stage = app.stage;
+
+			var gap = 11; //间隙
+			var targetScale = 1; //组合成图形时点点的大小
+
+			var line = new PIXI.Graphics();
+			stage.addChild(line);
+
+			function createDot(__color) {
+				var dot = new PIXI.Container();
+				var graphics = new PIXI.Graphics();
+				graphics.lineStyle(0);
+				graphics.beginFill(__color, 0.5);
+				graphics.drawCircle(0, 0, 6);
+				graphics.endFill();
+				dot.addChild(graphics);
+				dot.child = graphics;
+				dot.speedX = getSpeed();
+				dot.speedY = getSpeed();
+				dot.scale.x = dot.scale.y = 0.2;
+				dot.alpha = 0.5;
+
+				return dot;
+			}
+
+			var dotArr = [];
+			for(var i = 0; i < 200; i++) {
+				var temp = createDot('0xff0000');
+				stage.addChild(temp);
+				dotArr.push(temp);
+				temp.isSelect = false;
+				temp.x = Math.random() * width;
+				temp.y = Math.random() * height;
+			}
+
+			//拼字
+			$('#btn').on('click', function() {
+				clearInterval(daojishi);
+				targetScale = 1;
+				gap = 11;
+				var __txt = document.getElementById('txt').value;
+				pin(__txt);
+			});
+
+			//倒计时
+			var daojishi;
+			$('#btn2').on('click', function() {
+				clearInterval(daojishi);
+				targetScale = 1;
+				gap = 11;
+				var num = 9;
+				pin(num);
+				daojishi = setInterval(function() {
+					num--;
+					if(num < 0) {
+						clearInterval(daojishi);
+						return;
+					}
+					pin(num);
+				}, 2000);
+			});
+
+			//拼图形
+			$('#btn3').on('click', function() {
+				clearInterval(daojishi);
+				targetScale = 1;
+				gap = 11;
+				pin2('images/pc2.png');
+			});
+
+			//拼二维码
+			$('#btn4').on('click', function() {
+				clearInterval(daojishi);
+				targetScale = 0.5;
+				gap = 4;
+				pin2('images/pc3.png');
+			});
+
+			//拼图形
+			function pin2(__src) {
+				var transObj = {}; //像素图组的左上角位置和宽高
+
+				var config = {
+					type: 'pic',
+					picSrc: __src,
+					skewX: 10,
+					skewY: 10,
+					width: width,
+					height: height,
+					loadEnd: showPic
+				};
+
+				PfPos.getImageData(config);
+
+			}
+
+			//拼字
+			function pin(_txt) {
+				var transObj = {}; //像素图组的左上角位置和宽高
+
+				var config = {
+					type: 'text',
+					textBaseline: 'top',
+					textAlign: 'left',
+					font: 'bold 280px arial',
+					skewX: width / 2 - 140,
+					skewY: height / 2 - 140,
+					width: width,
+					height: height,
+					content: _txt,
+					loadEnd: showPic
+				};
+
+				PfPos.getImageData(config);
+			}
+
+			//组合图形
+			function showPic(__data) {
+				var data = __data;
+
+				var myPos = PfPos.getKeyPos(gap, data, width, height);
+				transObj = PfPos.getTrans(myPos); //获取像素图组的左上角位置和宽高
+
+				//初始化之前被选中的点的状态
+				for(var i = 0; i < dotArr.length; i++) {
+					var temp = dotArr[i];
+					if(temp.isSelect == true) {
+						temp.isSelect = false;
+						temp.speedX = getSpeed();
+						temp.speedY = getSpeed();
+					}
+				}
+
+				//用点组成图形，点不够的话就添加点
+				for(var i = 0; i < myPos.length; i++) {
+					var temp = myPos[i];
+					var dot;
+					if(i >= dotArr.length) {
+						dot = createDot('0xff0000');
+						dot.x = Math.random() * width;
+						dot.y = Math.random() * height;
+						dot.alpha = 1;
+						stage.addChild(dot);
+						dotArr.push(dot);
+					} else {
+						dot = dotArr[i];
+					}
+					dot.isSelect = true;
+
+					var targetX = (temp.x - transObj.minX) + width / 2 - transObj.maxX / 2;
+					var targetY = (temp.y - transObj.minY) + height / 2 - transObj.maxY / 2;
+
+					TweenMax.to(dot, 0.5, {
+						x: targetX,
+						y: targetY,
+						alpha: 1
+					});
+
+					TweenMax.to(dot.scale, 0.5, {
+						x: targetScale,
+						y: targetScale
+					});
+				}
+			}
+
+			app.ticker.add(function(delta) {
+				line.clear();
+				line.lineStyle(1, 0xff0000, 0.08);
+
+				//点的动作，被选中的点作抖动，没被选中的点随机移动并连线
+				for(var i = 0; i < dotArr.length; i++) {
+					var dot = dotArr[i];
+
+					if(dot.isSelect == true) {
+						/*dot.child.x = 1 - Math.random() * 2;
+						dot.child.y = 1 - Math.random() * 2;*/
+					} else {
+						dot.scale.x += (0.2 - dot.scale.x) * 0.05;
+						dot.scale.y += (0.2 - dot.scale.y) * 0.05;
+						dot.alpha += (0.5 - dot.alpha) * 0.05;
+						dot.x += dot.speedX;
+						dot.y += dot.speedY;
+						if(dot.x < 0 || dot.x > width || dot.y < 0 || dot.y > height) {
+							dot.speedX = getSpeed();
+							dot.speedY = getSpeed();
+						}
+					}
+				}
+
+				dotArr.forEach(move); //遍历连线
+			});
+
+			function getSpeed() {
+				var aa = Math.getRandomNum(-0.5, 0.5);
+				return aa;
+			}
+
+			//遍历连线
+			function move(ballA, i) {
+				var ballB;
+				if(ballA.isSelect == true) return
+				for(var j = i + 1; j < dotArr.length; j++) {
+					if(dotArr[j].isSelect == false) {
+						ballB = dotArr[j];
+						var distance = Math.getDistance(ballA, ballB);
+						if(distance < 40) {
+							line.moveTo(ballA.x, ballA.y);
+							line.lineTo(ballB.x, ballB.y);
+							line.endFill();
+						}
+					}
+				}
+			}
+		</script>
+	</body>
+
+</html>

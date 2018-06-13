@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="css/common.css" />
+		<title>PIXI滤镜</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+
+		<script src="lib/jquery-2.1.1.min.js"></script>
+		<script src="lib/pixi.min.js"></script>
+		<script src="lib/pixi-filters.js"></script>
+		<script src="lib/TweenMax.min.js"></script>
+		<script src="lib/vconsole.min.js"></script>
+		<script src="lib/mathutils.js"></script>
+
+		<script>
+			(function(doc, win) {
+				var docEl = doc.documentElement,
+					resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+					recalc = function() {
+						var clientWidth = docEl.clientWidth;
+						if(!clientWidth) return;
+						if(clientWidth >= 640) {
+							docEl.style.fontSize = '100px';
+						} else {
+							docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+						}
+					};
+
+				if(!doc.addEventListener) return;
+				win.addEventListener(resizeEvt, recalc, false);
+				doc.addEventListener('DOMContentLoaded', recalc, false);
+			})(document, window);
+		</script>
+
+	</head>
+
+	<body>
+
+		<script>
+			var vconsole = new VConsole();
+
+			var wid = window.innerWidth;
+			var hei = window.innerHeight;
+
+			var app = new PIXI.Application(wid, hei, {
+				backgroundColor: 0x000000
+			});
+			document.body.appendChild(app.view);
+
+			var stage = app.stage;
+			var container = new PIXI.Container();
+
+			stage.addChild(container);
+
+			app.stop();
+
+			var loader = new PIXI.loaders.Loader();
+			loader.add('bunny', 'images/man.png');
+			loader.add('bg', 'images/bg.jpg');
+			loader.add('displace', 'images/displace.png');
+			loader.add('displace2', 'images/displace2.png');
+			loader.once('complete', onLoaded);
+			loader.load();
+
+			function onLoaded() {
+				var style = new PIXI.TextStyle({
+					fontFamily: 'Arial',
+					fontSize: 42,
+					fontWeight: 'bold',
+					fill: ['#ffffff']
+				});
+
+				//===========================================================================//
+				var box = new PIXI.Sprite();
+				container.addChild(box);
+				box.x = 0;
+				box.y = 0;
+
+				var bg = new PIXI.Sprite.fromFrame('bg');
+				box.addChild(bg);
+				bg.alpha = 0;
+
+				var displace = new PIXI.Sprite.fromFrame('displace2');
+
+				var displaceFilter = new PIXI.filters.DisplacementFilter(displace);
+				displaceFilter.scale = {
+					x: 400,
+					y: 400
+				};
+
+				box.addChild(displace);
+
+				box.filters = [displaceFilter];
+
+				for(var i = 0; i < 3; i++) {
+					var txt = new PIXI.Text('哈', style);
+					box.addChild(txt);
+					txt.targetX = 50;
+					txt.targetY = 50 * (i + 1);
+					txt.x = txt.targetX + 150;
+					txt.y = Math.random() * 300; //txt.targetY - 50;
+					txt.alpha = 0;
+
+					TweenMax.to(txt, 2, {
+						x: txt.targetX,
+						y: txt.targetY,
+						alpha: 1,
+						repeat:-1,
+						yoyo:true
+					});
+				}
+
+				TweenMax.to(displaceFilter.scale, 2, {
+					x: 0,
+					y: 0,
+					repeat:-1,
+					yoyo:true
+				});
+
+				//=============================================================================//
+
+				app.start();
+			}
+
+			app.ticker.add(function(delta) {
+
+			});
+		</script>
+	</body>
+
+</html>

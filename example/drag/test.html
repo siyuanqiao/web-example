@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="css/common.css" />
+		<title>缓动拖动原生的</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+
+		<script src="lib/jquery-2.1.1.min.js"></script>
+		<script src="lib/vconsole.min.js"></script>
+
+		<script>
+			(function(doc, win) {
+				var docEl = doc.documentElement,
+					resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+					recalc = function() {
+						var clientWidth = docEl.clientWidth;
+						if(!clientWidth) return;
+						if(clientWidth >= 640) {
+							docEl.style.fontSize = '100px';
+						} else {
+							docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+						}
+					};
+
+				if(!doc.addEventListener) return;
+				win.addEventListener(resizeEvt, recalc, false);
+				doc.addEventListener('DOMContentLoaded', recalc, false);
+			})(document, window);
+		</script>
+
+		<style>
+			#box,
+			#box2 {
+				position: absolute;
+				width: 1rem;
+				height: 1rem;
+				background: #ff0000;
+				top: 1rem;
+				left: 1rem;
+			}
+			
+			#box2 {
+				top: 2rem;
+				background: #00ff00;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div id="box"></div>
+		<div id="box2"></div>
+
+		<script src="js/DragControl-dom.js"></script>
+		<script>
+			var vconsole = new VConsole();
+
+			var target = document.getElementById('box');
+			var target2 = document.getElementById('box2');
+
+			var cc = new DragControl_dom(target, target);
+			cc.easeSpeed = 0.1;
+			cc.limitX = true;
+			cc.rangeX = [100, 1000];
+
+			var cc2 = new DragControl_dom(target2, target2);
+			cc2.easeSpeed = 1;
+			cc2.limitY = true;
+			cc2.rangeY = [100, 500];
+
+			render();
+
+			function render() {
+				cc.update();
+				cc2.update();
+				requestAnimationFrame(render);
+			}
+		</script>
+	</body>
+
+</html>

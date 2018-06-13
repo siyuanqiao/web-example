@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title></title>
+    <script src="../libs/jquery/jquery-3.1.1.min.js"></script>
+    <script src="./jquery.form.js"></script>
+    <script src="./formvalidator.js"></script>
+    <script src="../../../../dev-vue/meituan-aiqianjin/static/src/main.js"></script>
+</head>
+<body>
+    <form class="form">
+        <div class="input-view">
+            <label for="name">姓名</label>
+            <input type="text" id="name" maxlength="20" value="a" name="name"
+                   data-validate="require"
+                   data-errmsg="请输入姓名">
+            <strong class="errmsg"></strong>
+        </div>
+        <div class="input-view">
+            <label for="phone">移动电话</label>
+            <input type="text" id="phone" maxlength="11" value="13555555555" name="phone"
+                   data-validate="require,custom[phone]"
+                   data-errmsg="请输入移动电话/移动电话格式不正确"
+                   data-now="phone">
+            <strong class="errmsg"></strong>
+        </div>
+        <div class="input-view">
+            <label for="email">邮件地址</label>
+            <input type="text" id="email" maxlength="20" value="a@a.com"
+                   data-validate="require,custom[email]"
+                   data-errmsg="请输入邮箱地址/邮件地址格式不正确">
+            <strong class="errmsg"></strong>
+        </div>
+        <div class="input-view">
+            <label for="school">学校</label>
+            <input type="text" id="school" maxlength="20" value="a"
+                   data-validate="require"
+                   data-errmsg="请输入学校">
+            <strong class="errmsg"></strong>
+        </div>
+        <div class="input-view">
+            <label for="professional">专业</label>
+            <input type="text" id="professional" maxlength="20" value="a"
+                   data-validate="require"
+                   data-errmsg="请输入专业">
+            <strong class="errmsg"></strong>
+        </div>
+        <div class="input-view">
+            <label for="introduce">个人介绍</label>
+            <textarea id="introduce" rows="10"
+                      data-validate="require"
+                      data-errmsg="请输入个人介绍">a</textarea>
+            <strong class="errmsg"></strong>
+        </div>
+        <button class="careers-btn submit-btn" type="button"><span>提交申请</span></button>
+    </form>
+</body>
+</html>

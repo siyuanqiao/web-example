@@ -1,0 +1,52 @@
+{"frames": {
+
+"close.png":
+{
+	"frame": {"x":186,"y":2,"w":44,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":44,"h":44},
+	"sourceSize": {"w":50,"h":50}
+},
+"drag.png":
+{
+	"frame": {"x":140,"y":2,"w":44,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":44,"h":44},
+	"sourceSize": {"w":50,"h":50}
+},
+"rotate.png":
+{
+	"frame": {"x":94,"y":2,"w":44,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":44,"h":44},
+	"sourceSize": {"w":50,"h":50}
+},
+"translate.png":
+{
+	"frame": {"x":48,"y":2,"w":44,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":44,"h":44},
+	"sourceSize": {"w":50,"h":50}
+},
+"zoom.png":
+{
+	"frame": {"x":2,"y":2,"w":44,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":44,"h":44},
+	"sourceSize": {"w":50,"h":50}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "controller.png",
+	"format": "RGBA8888",
+	"size": {"w":232,"h":48},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:be6614363a877ea86cf755e4df0287f7$"
+}
+}

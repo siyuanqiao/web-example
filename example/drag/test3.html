@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="css/common.css" />
+		<title>缓动拖动PIXI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+
+		<script src="lib/jquery-2.1.1.min.js"></script>
+		<script src="lib/pixi.min.js"></script>
+		<script src="lib/vconsole.min.js"></script>
+
+		<script>
+			(function(doc, win) {
+				var docEl = doc.documentElement,
+					resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+					recalc = function() {
+						var clientWidth = docEl.clientWidth;
+						if(!clientWidth) return;
+						if(clientWidth >= 640) {
+							docEl.style.fontSize = '100px';
+						} else {
+							docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+						}
+					};
+
+				if(!doc.addEventListener) return;
+				win.addEventListener(resizeEvt, recalc, false);
+				doc.addEventListener('DOMContentLoaded', recalc, false);
+			})(document, window);
+		</script>
+
+	</head>
+
+	<body>
+		<script src="js/DragControl-pixi.js"></script>
+		<script>
+			var vconsole = new VConsole();
+
+			var app = new PIXI.Application(640, 1336, {
+				backgroundColor: 0x1099bb
+			});
+			document.body.appendChild(app.view);
+
+			var stage = app.stage;
+
+			var box = new PIXI.Graphics();
+			box.beginFill(0xFF700B, 1);
+			box.drawRect(50, 250, 120, 120);
+
+			var box2 = new PIXI.Graphics();
+			box2.beginFill(0xFF7777, 1);
+			box2.drawRect(250, 250, 50, 50);
+
+			stage.addChild(box);
+			stage.addChild(box2);
+
+			var controls = new DragControl_pixi(box, box);
+			var controls2 = new DragControl_pixi(box2, box2);
+			controls2.easeSpeed = 0.1;
+
+			animate();
+			//渲染
+			function animate() {
+				requestAnimationFrame(animate);
+				pixiUpdate();
+			}
+
+			function pixiUpdate() {
+				if(controls) {
+					controls.update();
+				}
+				if(controls2) {
+					controls2.update();
+				}
+				app.render(stage);
+			}
+		</script>
+	</body>
+
+</html>

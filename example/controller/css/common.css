@@ -1,0 +1,34 @@
+*{ padding:0;  margin:0;}
+
+html, body {position: relative;height: 100%; overflow:hidden; background: #000000;}
+
+table,td,tr,th{ padding:0; margin:0; border:0}
+
+
+.horizontal{
+	position: absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:url(../images/horizontal.jpg);
+	background-size: cover;
+	background-position: 50% 50%;
+	display: none;
+	z-index: 99999;
+}
+
+.vertical{
+	position: absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:url(../images/vertical.jpg);
+	background-size: cover;
+	background-position: 50% 50%;
+	display: none;
+	z-index: 99999;
+}
+
+
