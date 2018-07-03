@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS绘制圆弧</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+        }
+        .circular-arc div[class*=circular-arc]{
+            position:absolute;
+            z-index:1;
+            display: inline-block;
+            width:200px;
+            height:200px;
+            /*clip属性剪裁绝对定位元素*/
+            clip:rect(0,100px,200px,0px);
+        }
+        .circular-arc div[class*=circular-arc] span{
+            position:absolute;
+            display:inline-block;
+            width:200px;
+            height:200px;
+            border-radius:100px;
+            clip:rect(0,100px,200px,0px);
+            border:1px solid black;
+        }
+
+        .circular-arc-left{
+
+        }
+        .circular-arc-left span{
+            background-color:turquoise;
+        }
+
+        .circular-arc .circular-arc-right{
+            z-index:0;
+            transform:rotate(180deg);
+        }
+        .circular-arc-right span{
+            transform:rotate(50deg);
+            background-color:turquoise;
+        }
+    </style>
+</head>
+<body>
+    <div class="circular-arc">
+        <div class="circular-arc-left">
+            <span></span>
+        </div>
+        <div class="circular-arc-right">
+            <span></span>
+        </div>
+    </div>
+</body>
+</html>
