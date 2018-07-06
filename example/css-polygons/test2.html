@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>css-polygons</title>
+    <script src="jquery-2.1.1.min.js"></script>
+
+    <style>
+        .shard-wrap {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            left: 100px;
+            top: 100px;
+        }
+
+        .trans{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-transition: all 0.5s cubic-bezier(.7,.3,0,1);
+            -moz-transition: all 0.5s cubic-bezier(.7,.3,0,1);
+            -ms-transition: all 0.5s cubic-bezier(.7,.3,0,1);
+            -o-transition: all 0.5s cubic-bezier(.7,.3,0,1);
+            transition: all 0.5s cubic-bezier(.7,.3,0,1);
+        }
+
+        .dot1{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dot1 .path:nth-child(1) {
+            background-color: black;
+            clip-path: polygon(120px 0px,30px 50px,40px 110px);
+        }
+        .dot1 .path:nth-child(2) {
+            background-color: black;
+            clip-path: polygon(120px 90px,30px 150px,120px 210px);
+        }
+        .dot1 .path:nth-child(3) {
+            background-color: black;
+            clip-path: polygon(40px 180px,150px 250px,110px 320px);
+        }
+
+
+        .dot2{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dot2 .path:nth-child(1) {
+            background-color: indianred;
+            clip-path: polygon(0px 10px,50px 80px,180px 20px);
+        }
+        .dot2 .path:nth-child(2) {
+            background-color: indianred;
+            clip-path: polygon(180px 40px,30px 100px,100px 150px);
+        }
+        .dot2 .path:nth-child(3) {
+            background-color: indianred;
+            clip-path: polygon(30px 110px,100px 170px,10px 320px);
+        }
+    </style>
+</head>
+<body>
+<button id="btn">点我</button>
+<div class="shard-wrap">
+    <div class="dot1">
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+    </div>
+</div>
+
+<script>
+    var btn=document.getElementById('btn');
+    btn.addEventListener('click',function(){
+        $('.dot1').removeClass('dot1').addClass('dot2');
+    });
+</script>
+</body>
+</html>
