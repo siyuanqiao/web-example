@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>css-polygons</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+    <script>
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = 'onorientationchange' in window ? 'onorientationchange' : 'resize',
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if (!clientWidth) return;
+                    if (clientWidth >= 640) {
+                        docEl.style.fontSize = '100px';
+                    } else {
+                        docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+                    }
+                };
+
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+
+    <script src="jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/main.css"/>
+
+</head>
+<body>
+<button id="btn">点我便身</button>
+<div class="shard-wrap">
+    <div class="dot1">
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+        <div class="path trans"></div>
+    </div>
+</div>
+
+<script>
+    var btn = document.getElementById('btn');
+    var id = 1;
+    btn.addEventListener('click', function () {
+        if (id == 1) {
+            $('.dot1').removeClass('dot1').addClass('dot2');
+            id = 2;
+        } else {
+            $('.dot2').removeClass('dot2').addClass('dot1');
+            id = 1;
+        }
+
+    });
+</script>
+</body>
+</html>
