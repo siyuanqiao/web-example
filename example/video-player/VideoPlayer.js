@@ -142,10 +142,11 @@ var Skin = function (_dom, _video) {
 
 
     _v.addEventListener("waiting", function () {
-      console.log('onwaiting,当媒介已停止播放但打算继续播放时（比如当媒介暂停已缓冲更多数据）运行脚本');
+      console.log('waiting,当媒介已停止播放但打算继续播放时（比如当媒介暂停已缓冲更多数据）运行脚本');
       scope.onState = 'waiting';
     }, false);
     _v.addEventListener("play", function () {
+      console.log('play,当媒介已就绪可以开始播放时运行的脚本。')
     }, false);
     _v.addEventListener("playing", function () {
       console.log('playing,当媒介已开始播放时运行的脚本。-----加载提示影藏');
