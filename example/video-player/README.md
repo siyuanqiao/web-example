@@ -1,13 +1,7 @@
-<html>
-<head>
-    <title>VideoPlayer</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="stylesheet" href="vp.css">
-</head>
-<body>
+# 视频播放器
+
+## HTML
+```
 <div class="video-player" id="video_wrap">
     <div class="video-wrap">
         <video id="video" width="100%" preload="auto" poster="" src=""
@@ -39,27 +33,27 @@
         </div>
     </div>
 </div>
+```
 
-<script src="../../libs/jquery/jquery-2.1.1.min.js"></script>
-<script src="VideoPlayer.js"></script>
-<script>
-  /**
-   * @options
-   * @param {String} el - 视频元素id
-   * @param {String} url - 视频地址
-   * @param {Number} volume - 音量
-   * @param {Boolean} autoplay - 是否自动播放视频
-   * @param {Boolean} loop - 是否循环播放视频
-   * @param {Boolean} mute - 是否静音播放视频
-   */
-  var options = {
-    el: "#video_wrap",
-    url: 'movie.mp4',////videos.akqa.com/work/nike/nba-connected-jersey/film.mp4
-    autoplay: true,
-    loop: false,
-    volume: 1
-  }
-  var vp=new VideoPlayer(options);
-</script>
-</body>
-</html>
+## JS
+
+```js
+/**
+* @options
+* @param {String} el - 视频元素id
+* @param {String} url - 视频地址
+* @param {Number} volume - 音量
+* @param {Boolean} autoplay - 是否自动播放视频
+* @param {Boolean} loop - 是否循环播放视频
+* @param {Boolean} mute - 是否静音播放视频
+*/
+var options = {
+	el: "#video_wrap",
+	url: 'movie.mp4',////videos.akqa.com/work/nike/nba-connected-jersey/film.mp4
+	autoplay: true,
+	loop: false,
+	volume: 1
+}
+var vp=new VideoPlayer(options);
+```
+
