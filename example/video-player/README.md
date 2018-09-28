@@ -35,6 +35,12 @@
 </div>
 ```
 
+## CSS
+
+``` css
+<link rel="stylesheet" href="vp.css">
+```
+
 ## JS
 
 ```js
