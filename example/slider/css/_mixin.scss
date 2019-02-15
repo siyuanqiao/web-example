@@ -1,0 +1,101 @@
+//@example @include css3(transition,0.5s);
+@mixin css3($property,$value){
+  @each $prefix in -webkit-,
+  -moz-,
+  -ms-,
+  -o-,
+  ''{
+    #{$prefix}#{$property}:$value;
+  }
+}
+
+//@example
+//@include keyframes(slide-down) {
+//  0% { opacity: 1; }
+//  90% { opacity: 0; }
+//}
+//.element {
+//  @include css3(animation,slide-down 5s 3);
+//}
+@mixin keyframes ($animation-name) {
+  @-webkit-keyframes #{$animation-name}{
+    @content;
+  }
+  @-moz-keyframes #{$animation-name}{
+    @content;
+  }
+  @-ms-keyframes #{$animation-name}{
+    @content;
+  }
+  @-o-keyframes #{$animation-name}{
+    @content;
+  }
+  @keyframes #{$animation-name}{
+    @content;
+  }
+}
+
+//兼容 Internet Explorer 5 的跨浏览器透明度
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+}
+
+
+//@example
+//a {
+//  color: gray;
+//  @include transition(color .3s ease);
+//  &:hover {
+//    color: black;
+//  }
+//}
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+// Positioning stuff
+@mixin position($position,$l:null,$t:null,$r:null,$b:null,$z:99) {
+  position: $position;
+  @if($l){
+    left: $l;
+  }
+  @if($t){
+    top:$t;
+  }
+  @if($r){
+    right: $r;
+  }
+  @if($b){
+    bottom: $b;
+  }
+  z-index: $z;
+}
+
+@mixin box($dis:block,$w:false,$h:false){
+  @if($dis!=block){
+    display: $dis;
+  }
+  @if $w{
+    width:$w;
+  }
+  @if $h{
+    height:$h;
+  }
+}
+
+// Absolutely positioning stuff
+@mixin absolute($args) {
+  @include position(absolute, $args);
+}
+
+//block元素 左右居中
+@mixin center-block {
+  margin-left: auto;
+  margin-right: auto;
+}

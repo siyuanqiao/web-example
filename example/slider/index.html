@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+    <title>slider</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="img/1.jpg" alt="...">
+                <div class="carousel-caption">
+                    aaa
+                </div>
+            </div>
+            <div class="item">
+                <img src="img/2.jpg" alt="...">
+                <div class="carousel-caption">
+                    bbb
+                </div>
+            </div>
+            <div class="item">
+                <img src="img/3.jpg" alt="...">
+                <div class="carousel-caption">
+                    ccc
+                </div>
+            </div>
+            <div class="item">
+                <img src="img/4.jpg" alt="...">
+                <div class="carousel-caption">
+                    ddd
+                </div>
+            </div>
+            <div class="item">
+                <img src="img/5.jpg" alt="...">
+                <div class="carousel-caption">
+                    eee
+                </div>
+            </div>
+            <div class="item">
+                <img src="img/6.jpg" alt="...">
+                <div class="carousel-caption">
+                    fff
+                </div>
+            </div>
+            <div class="item">
+                <img src="img/7.jpg" alt="...">
+                <div class="carousel-caption">
+                    ggg
+                </div>
+            </div>
+            <div class="item">
+                <img src="img/8.jpg" alt="...">
+                <div class="carousel-caption">
+                    hhh
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <!--<span class="glyphicon glyphicon-chevron-left" aria-hidden="true">&lt;</span>-->
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <!--<span class="glyphicon glyphicon-chevron-right" aria-hidden="true">&gt;</span>-->
+        </a>
+
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="6"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="7"></li>
+        </ol>
+    </div>
+
+
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/carousel.js"></script>
+    <script src="js/alloy_finger.js"></script>
+    <script>
+      var $carousel=$('#carousel-example-generic');
+      $carousel.carousel({});
+
+      var af = new AlloyFinger($carousel[0], {
+        touchStart: function () { },
+        touchMove: function () { },
+        touchEnd:  function () { },
+        touchCancel: function () { },
+        multipointStart: function () { },
+        multipointEnd: function () { },
+        tap: function () { },
+        doubleTap: function () { },
+        longTap: function () { },
+        singleTap: function () { },
+        rotate: function (evt) {
+          // console.log(evt.angle);
+        },
+        pinch: function (evt) {
+          // console.log(evt.zoom);
+        },
+        pressMove: function (evt) {
+          // console.log(evt.deltaX);
+          // console.log(evt.deltaY);
+        },
+        swipe: function (evt) {
+          console.log("swipe" + evt.direction);
+          if(evt.direction=='Left'){
+            $carousel.data('bs.carousel').next();
+          }else if(evt.direction=='Right'){
+            $carousel.data('bs.carousel').prev();
+          }
+        }
+      });
+    </script>
+</body>
+</html>
