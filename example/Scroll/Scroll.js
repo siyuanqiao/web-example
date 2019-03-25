@@ -125,9 +125,9 @@ class Scroll {
 
     var momentum = this._momentum(data.global.x, this.touchBeginEvent.startX, millisecond,640 - this.children.width,640)
     // console.log(momentum)
-    var newX = momentum.destination;
+    var newX = this.ele.x+momentum.destination;
     var newY = momentum.destination;
-    console.log(this.ele.x,newX)
+    // console.log(this.ele.x,newX)
     // console.log(this.ele.y,newY)
     var duration = momentum.duration;
     var easing = ease.quadratic.fn;
@@ -135,7 +135,7 @@ class Scroll {
   }
 
   /**
-   * current：当前鼠标位置
+   *  current：当前鼠标位置
    *  start：touchStart时候记录的Y（可能是X）的开始位置，但是在touchmove时候可能被重写
    *  time： touchstart到手指离开时候经历的时间，同样可能被touchmove重写
    *  lowerMargin：y可移动的最大距离，这个一般为计算得出 this.wrapperHeight - this.scrollerHeight
@@ -146,25 +146,28 @@ class Scroll {
     var distance = current - start,
         // 根据差值求出平均速度
         speed = Math.abs(distance) / time,
-
+        // 目的地
         destination,
+        // 持续时间
         duration;
     // 加速度的初始化
     deceleration = deceleration === undefined ? 0.0006 : deceleration;
 
     // 位移公式
     // x=Vot+1/2at^2 Vt是末速度,Vo是初速度,a是加速度,t为时间,X是位移距离 x=Vot+1/2at^2 Vt=Vo+at V^2-Vo^2=2ax
-    destination = this.ele.x + ( speed * speed ) / ( 2 * deceleration ) * ( distance < 0 ? -1 : 1 );
+    destination = current + ( speed * speed ) / ( 2 * deceleration ) * ( distance < 0 ? -1 : 1 );
     duration = speed / deceleration;
 
     if ( destination < lowerMargin ) {
       // 从左往右动
       destination = wrapperSize ? lowerMargin - ( wrapperSize / 2.5 * ( speed / 8 ) ) : lowerMargin;
+      // destination = lowerMargin
       distance = Math.abs(destination - current);
       duration = distance / speed;
     } else if ( destination > 0 ) {
       // 从右往左动
       destination = wrapperSize ? wrapperSize / 2.5 * ( speed / 8 ) : 0;
+      // destination = 0;
       distance = Math.abs(current) + destination;
       duration = distance / speed;
     }
