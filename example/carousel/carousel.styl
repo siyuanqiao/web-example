@@ -1,0 +1,246 @@
+// Wrapper for the slide container and indicators
+
+.carousel {
+  position: relative;
+}
+
+// 包装的幻灯片
+.carousel-inner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  > .item {
+    display: none;
+    position: relative;
+    text-align: center;
+    transition:.6s ease-in-out left
+  }
+
+  > .active,
+  > .next,
+  > .prev {
+    display: block;
+  }
+
+  > .active {
+    left: 0;
+  }
+
+  > .next,
+  > .prev {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  > .next {
+    left: 100%;
+  }
+  > .prev {
+    left: -100%;
+  }
+  > .next.left,
+  > .prev.right {
+    left: 0;
+  }
+
+  > .active.left {
+    left: -100%;
+  }
+  > .active.right {
+    left: 100%;
+  }
+
+}
+
+// 导航的左/右控件 Left/right controls for nav
+// ---------------------------
+.carousel-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 15%;
+  opacity: 0.5;
+  //filter: alpha(opacity=50);
+  font-size: 20px;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0);
+  // We can't have this transition here because WebKit cancels the carousel
+  // animation if you trip this while in the middle of another animation.
+
+  // Set gradients for backgrounds
+  &.left {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.0001) 100%);
+    background-repeat: repeat-x;
+    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
+  }
+  &.right {
+    left: auto;
+    right: 0;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.05) 100%);
+    background-repeat: repeat-x;
+    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
+  }
+
+  // Hover/focus state
+  &:hover,
+  &:focus {
+    outline: 0;
+    color: #ffffff;
+    text-decoration: none;
+    //@include opacity(.9);
+  }
+
+  // Toggles
+  .icon-prev,
+  .icon-next,
+  .glyphicon-chevron-left,
+  .glyphicon-chevron-right {
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    z-index: 5;
+    display: inline-block;
+  }
+  .icon-prev,
+  .glyphicon-chevron-left {
+    left: 50%;
+    margin-left: -10px;
+  }
+  .icon-next,
+  .glyphicon-chevron-right {
+    right: 50%;
+    margin-right: -10px;
+  }
+  .icon-prev,
+  .icon-next {
+    width:  20px;
+    height: 20px;
+    line-height: 1;
+    font-family: serif;
+  }
+
+
+  .icon-prev {
+    &:before {
+      content: '\2039';// SINGLE LEFT-POINTING ANGLE QUOTATION MARK (U+2039)
+    }
+  }
+  .icon-next {
+    &:before {
+      content: '\203a';// SINGLE RIGHT-POINTING ANGLE QUOTATION MARK (U+203A)
+    }
+  }
+}
+
+// Optional indicator pips
+//
+// Add an unordered list with the following class and add a list item for each
+// slide your carousel holds.
+// 可选的指示脉冲
+// 用下面的类添加一个无序列表，并为每个类添加一个列表项
+// 滑动旋转木马。
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 15;
+  display: inline-block;
+  //width: 60%;
+  //margin-left: -30%;
+  margin:0;
+  padding:0;
+  list-style: none;
+  text-align: center;
+
+  transform:translate(-50%,0);
+
+  li {
+    display: inline-block;
+    width:  20px;
+    height: 20px;
+    margin: 1px;
+    text-indent: -999px;
+
+    border-radius: 20px;
+    cursor: pointer;
+
+    background-color: #bcbcbc;
+  }
+  .active {
+    margin: 0;
+    width:  28px;
+    height: 28px;
+    background-color: #ff5f05;
+  }
+}
+
+// Optional captions
+// -----------------------------
+// Hidden by default for smaller viewports
+// 可选的标题
+// -----------------------------
+// 默认情况下隐藏在较小的视图中
+.carousel-caption {
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  bottom: 20px;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  //color: $carousel-caption-color;
+  color: #ffffff;
+  text-align: center;
+  //text-shadow: $carousel-text-shadow;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  & .btn {
+    text-shadow: none; // No shadow for button elements in carousel-caption
+  }
+}
+
+
+$carousel-control-font-size = 20px;
+$screen-sm-min = 576px;
+
+// Scale up controls for tablets and up
+@media screen and (min-width: $screen-sm-min) {
+
+  // Scale up the controls a smidge
+  .carousel-control {
+    .glyphicon-chevron-left,
+    .glyphicon-chevron-right,
+    .icon-prev,
+    .icon-next {
+      width: ($carousel-control-font-size * 1.5);
+      height: ($carousel-control-font-size * 1.5);
+      margin-top: ($carousel-control-font-size / -2);
+      font-size: ($carousel-control-font-size * 1.5);
+    }
+    .glyphicon-chevron-left,
+    .icon-prev {
+      margin-left: ($carousel-control-font-size / -2);
+    }
+    .glyphicon-chevron-right,
+    .icon-next {
+      margin-right: ($carousel-control-font-size / -2);
+    }
+  }
+
+  // Show and left align the captions
+  .carousel-caption {
+    left: 20%;
+    right: 20%;
+    padding-bottom: 30px;
+  }
+
+  // Move up the indicators
+  /*.carousel-indicators {
+    bottom: 20px;
+  }*/
+}
