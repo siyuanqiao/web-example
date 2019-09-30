@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>抛物线运动</title>
+</head>
+<body></body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.8.4/pixi.min.js"></script>
+<script>
+  var app = new PIXI.Application(800, 600, {backgroundColor : 0x1099bb});
+  document.body.appendChild(app.view);
+
+  function Flower(){
+    PIXI.Container.call(this)
+
+    this.init = function(){
+      this.minSpeed=20;//最小速度
+      this.speed=Math.random()*10+this.minSpeed;//速度
+      this.angle=Math.random()*30-15;//炸弹飞出时的角度
+      this.vx=Math.sin(this.angle*Math.PI/180)*this.speed;
+      this.vy=Math.cos(this.angle*Math.PI/180)*this.speed;
+      this.vg=0.98;//重力
+
+      var s = new PIXI.Graphics();
+      s.beginFill(Math.random() * 0xff0000)
+      s.drawRect(0,0,20,20)
+      s.endFill()
+      this.addChild(s)
+    }
+
+    this.update=function(){
+      this.vy-=this.vg;
+      this.x+=this.vx;
+      this.y-=this.vy;
+    }
+  }
+  Flower.prototype = PIXI.Container.prototype
+
+  function cbutton(){
+    var g = new PIXI.Graphics();
+    g.beginFill(0xff0000)
+    g.drawRect(0,0,100,40)
+    g.endFill()
+
+    var t = new PIXI.Text('点击我');
+    g.addChild(t)
+    t.x = 50
+    t.y = 5
+    t.anchor.set(.5,0)
+    return g
+  }
+
+  var shapArr = []
+  var btn = cbutton()
+  app.stage.addChild(btn);
+  btn.interactive = true
+  btn.on('click',function(){
+    var o = new Flower()
+    o.init()
+    o.x = 400;
+    o.y = 550;
+    app.stage.addChild(o);
+    shapArr.push(o)
+  })
+
+  app.ticker.add(function(delta) {
+    for(var i=0;i<shapArr.length;i++){
+      shapArr[i].update();
+    }
+  });
+</script>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title></title>
+</head>
+<body>
+</body>
+</html>
+<script src="../../libs/phaser/phaser-3.17.0.js"></script>
+<script src="../../libs/stats.min.js"></script>
+<script>
+  (function () {
+    var tnum = 50000;
+    console.log("render Object Number:", tnum);
+    var bunnys = [];
+    var game = new Phaser.Game({
+      type: Phaser.WEBGL,
+      autoFocus: true,
+      width: 800,
+      height: 600,
+      scene: {
+        init() {
+
+        },
+        preload() {
+          this.load.image('bunny.png', './bunny.png');
+        },
+        create() {
+          for (var i = 0; i < tnum; i++) {
+            var bunny = this.add.sprite(0, 0, 'bunny.png');
+            bunny.x = Math.random() * 800;
+            bunny.y = Math.random() * 600;
+            // stage.addChild(bunny);
+            bunnys.push(bunny);
+          }
+        },
+        update() {
+          for (var i = 0; i < tnum; i++) {
+            bunnys[i].rotation += 0.1;
+          }
+        }
+      },
+    })
+  }());
+</script>
+
+<script>
+  var stats = new Stats();
+  document.body.appendChild(stats.domElement);
+  stats.domElement.style.position = 'absolute'
+  stats.domElement.style.top = '0'
+  stats.domElement.style.right = '0'
+
+  function animate2() {
+    requestAnimationFrame(animate2);
+
+    if (stats) stats.update();
+  };
+  animate2();
+</script>

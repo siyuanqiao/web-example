@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script src="../../../libs/phaser/phaser-3.18.0.js"></script>
+<script src="../../../libs/gsap/TweenMax.min.js"></script>
+<script>
+  var config = {
+    type: Phaser.AUTO,
+    parent: 'phaser-example',
+    width: 800,
+    height: 600,
+    scene: {
+      preload: preload,
+      create: create
+    }
+  };
+
+  var game = new Phaser.Game(config);
+
+  function preload() {
+    this.load.image('tmw_desert_spacing', './tmw_desert_spacing.png');
+    this.load.image('bunny', './bunny.png');
+    this.load.image('eye', './flowerTop2.png');
+  }
+
+  function create() {
+
+    let stage1 = this.add.container()
+    stage1.name = 'stage1'
+    stage1.setInteractive({
+      hitArea: new Phaser.Geom.Rectangle(0, 0, 2000, 2000),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      draggable: true
+    })
+
+    let bgmap = this.add.tileSprite(0, 0, 2000, 2000, 'tmw_desert_spacing').setOrigin(0, 0)
+    bgmap.name = 'bgmap'
+    stage1.add(bgmap)
+
+    for (var i = 0; i < 14; i++) {
+
+      var sprite = this.add.sprite(100 + i * 30, 100 + i * 30, 'eye').setInteractive({
+        pixelPerfect: true,
+        draggable: true
+      });
+      stage1.add(sprite)
+      // sprite.on('drag', function (pointer, dragX, dragY) {
+      //
+      //   this.x = dragX;
+      //   this.y = dragY;
+      //
+      // });
+      /*sprite.on('pointerdown', function (pointer) {
+
+        console.log('down');
+        this.setTint(0xcccccc);
+
+      });
+
+      sprite.on('pointerup', function (pointer) {
+
+        console.log('up');
+        this.clearTint();
+
+      });
+
+      sprite.on('pointerover', function (pointer) {
+
+        console.log('over');
+
+      });
+
+      sprite.on('pointerout', function (pointer) {
+
+        console.log('out');
+        this.clearTint();
+
+      });*/
+    }
+    let deceleration = 0.001 // 0.004 0.0006
+    this.wrapperWidth = 800
+    this.wrapperHeight = 600
+    this.scrollerWidth = 2000
+    this.scrollerHeight = 2000
+    this.maxScrollX = this.wrapperWidth - this.scrollerWidth;
+    this.maxScrollY = this.wrapperHeight - this.scrollerHeight;
+    this.startTime = null
+    this.startX = 0
+    this.startY = 0
+    this.absDistance = {x: 0, y: 0}
+    this.input.on('dragstart', function (pointer, gameObject, dragX, dragY) {
+      let tw = TweenMax.getTweensOf(gameObject)
+      if(tw.length>0){
+        tw[0].kill()
+      }
+      this.startTime = new Date().getTime();
+      this.startX = gameObject.x
+      this.startY = gameObject.y
+      console.log('dragestart xy:',this.startX,this.startY)
+      // console.log('dragstart:', pointer, gameObject, dragX, dragY)
+    }, this);
+    this.input.on('dragend', function (pointer, gameObject, dragX, dragY) {
+      let duration = new Date().getTime() - this.startTime
+      // let distanceX = Math.abs(newX - this.startX)
+      // let distanceY = Math.abs(newY - this.startY)
+
+      let momentumX = momentum(gameObject.x, this.startX, duration, this.maxScrollX, 0, deceleration)
+      let momentumY = momentum(gameObject.y, this.startY, duration, this.maxScrollY, 0, deceleration)
+      let newX = momentumX.destination
+      let newY = momentumY.destination
+      let time = Math.max(momentumX.duration, momentumY.duration)
+      console.log('start xy:',this.startX, this.startY)
+      console.log('cur xy:',gameObject.x, gameObject.y)
+      console.log('end xy:', newX, newY)
+      console.log('time:', momentumX.duration, momentumY.duration, time)
+
+      if (gameObject.name === 'stage1') {
+        TweenMax.to(gameObject, time / 1000, {x: newX, y: newY, ease: Power2.easeOut})
+      }
+    }, this);
+    this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+      if (gameObject.name === 'stage1') {
+        dragX = dragX >= 0 ? 0 : dragX <= this.maxScrollX ? this.maxScrollX : dragX;
+        dragY = dragY >= 0 ? 0 : dragY <= this.maxScrollY ? this.maxScrollY : dragY;
+
+        this.absDistance.x = Math.abs(dragX - this.startX)
+        this.absDistance.y = Math.abs(dragY - this.startY)
+
+        let timestamp = new Date().getTime()
+        if (timestamp - this.startTime > 300) {
+          this.startTime = timestamp;
+          this.startX = dragX;
+          this.startY = dragY;
+        }
+      }
+
+      gameObject.x = dragX;
+      gameObject.y = dragY;
+    }, this);
+
+    this.input.on('gameobjectdown', function (pointer, gameObject) {
+      if (gameObject.name !== 'stage1') {
+        gameObject.setTint(Math.random() * 16000000);
+      }
+    });
+
+    this.input.on('gameobjectout', function (pointer, gameObject) {
+      if (gameObject.name !== 'stage1') {
+        gameObject.clearTint();
+      }
+    });
+
+    this.input.on('gameobjectup', function (pointer, gameObject) {
+      if (gameObject.name !== 'stage1') {
+        gameObject.clearTint();
+      }
+    });
+
+
+    this.input.on('pointerdown', function (pointer) {
+
+      // console.log('scene pointerdown');
+
+    });
+
+    this.input.on('pointerup', function (pointer) {
+
+      // console.log('scene pointerup');
+
+    });
+
+    // this.input.on('pointerdownoutside', function (pointer) {
+    //
+    //   console.log('pointerdownoutside');
+    //
+    // });
+    //
+    // this.input.on('pointerupoutside', function (pointer) {
+    //
+    //   console.log('pointerupoutside');
+    //
+    // });
+
+    // this.input.on('gameout', function () {
+    //
+    //   console.log('canvas gameout')
+    //
+    // });
+    //
+    // this.input.on('gameover', function () {
+    //
+    //   console.log('canvas gameover')
+    //
+    // });
+  }
+
+  /*我们来做一点解释，首先看看我们的参数：
+	① 这个方法应该是在touchend时候使用，第一个参数为当前鼠标的位置
+	② 第二个参数是touchstart时候记录的坐标位置
+	③ 第三个参数为时间参数，便是开始触屏到离开时候所用时间（touchstart到touchend）
+	PS：这里我们其实可以做一个猜测了，我们有一次触屏的时间与距离，自然可以根据动力加速度计算出此次应该运动的时间与距离
+	④ 第四个参数是干神马的还不太明确，应该是控制边界位置的，这个就决定了我们不能无限制的拖动wrapper
+	⑤ 第五个参数为容器的高度
+		然后我们来以此读一读这里的代码：
+	① 得出此次拉动的距离distance/然后计算出这次拖动的速度（PS：个人觉得这里操作很不错，我没有想到）
+	② 然后定义了一些其它参数，deceleration这个用于计算速度/距离的参数，然后两个就是要返回的距离以及时间了
+		PS：我想说他这里的计算最终位置的函数应该是物理里面的一个计算摩擦参数的公式，尼玛是什么我真的不知道了，还有平方来着......
+	③ 这里还有一个关键点就是distance有可能是负值，这个会决定向上还是向下运动
+	④ 一般情况这里就结束来了，然后下面if里面一大段计算是用于处理运动轨迹超出时候的距离与速度重新计算（反弹效果）
+	好了，这个函数比较关键，他主要返回了最后要去到的位置，已经到这个位置的时间，里面具体的实现我们暂时不关系，后面这个必须理一理*/
+  var momentum = function (current, start, time, lowerMargin, wrapperSize, deceleration) {
+    var distance = current - start, // 距离
+        speed = Math.abs(distance) / time, // 速度 = (距离/时间)
+        destination,// 终点
+        duration;// 持续时间
+
+    deceleration = deceleration === undefined ? 0.0006 : deceleration;
+
+    destination = current + (speed * speed) / (2 * deceleration) * (distance < 0 ? -1 : 1);
+    duration = speed / deceleration;
+
+    if (destination < lowerMargin) {
+      destination = wrapperSize ? lowerMargin - (wrapperSize / 2.5 * (speed / 8)) : lowerMargin;
+      distance = Math.abs(destination - current);
+      duration = distance / speed;
+    } else if (destination > 0) {
+      destination = wrapperSize ? wrapperSize / 2.5 * (speed / 8) : 0;
+      distance = Math.abs(current) + destination;
+      duration = distance / speed;
+    }
+
+    return {
+      destination: Math.round(destination),
+      duration: duration
+    };
+  };
+
+</script>
