@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+</html>
+<!--<script src="../../../libs/phaser/phaser-3.18.0.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-arcade-physics.min.js"></script>
+<script>
+  var game = new Phaser.Game({
+    type: Phaser.AUTO,
+    scene: {
+      create: create
+    }
+  });
+
+  function create() {
+    this.add.text(100, 100, "本次需要       星星星通过下 径可以获得星星哦！Vity自 动换行自动换行自动换行", {
+      fontFamily: "Arial",
+      fontSize: 32,
+      color: "#cccccc",
+      backgroundColor: "#ffffff",
+      wordWrap: {width: 450, useAdvancedWrap: false}
+    })
+
+    this.add.text(230, 100, "123", {
+      fontFamily: "Arial",
+      fontSize: 32,
+      color: "#ff0000"
+    })
+
+    function wordWrap(text, textObject) {
+
+      // This wrap just puts each word on a separate line, but you could inject your own
+      // language-specific logic here.
+      // text = text.split(' ');
+
+      // You can return either an array of individual lines or a string with line breaks (e.g. \n) in
+      // the correct place.
+      return text;
+    }
+  }
+</script>

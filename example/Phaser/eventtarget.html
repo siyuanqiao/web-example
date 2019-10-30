@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-arcade-physics.min.js"></script>
+<script>
+  var game = new Phaser.Game({
+    type: Phaser.AUTO,
+    transparent: true,
+    backgroundColor: 0x1099bb,
+    scene: {
+      create: create
+    }
+  });
+
+  function create() {
+    let layer1 = this.add.container(0, 0)
+    layer1.name = 'layer1'
+    layer1.setInteractive({
+      hitArea: new Phaser.Geom.Rectangle(0, 0, 100, 100),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      cursor: "pointer",
+      useHandCursor: false
+    })
+    layer1.on('pointerup', () => {
+      console.log('layer1 pointerup')
+    })
+
+    let rect2 = this.add.graphics().fillStyle(0xffff00, 1).fillRect(0, 0, 80, 80)
+    rect2.name = 'rect2'
+    layer1.add(rect2)
+    rect2.setInteractive(new Phaser.Geom.Rectangle(0, 0, 80, 80), Phaser.Geom.Rectangle.Contains);
+    rect2.on('pointerup', () => {
+      console.log('rect2 pointerup')
+    })
+
+    let rect = this.add.graphics().fillStyle(0xff0000, 1).fillRect(0, 0, 50, 50)
+    rect.name = 'rect'
+    rect.setInteractive(new Phaser.Geom.Rectangle(0, 0, 50, 50), Phaser.Geom.Rectangle.Contains);
+    rect.on('pointerup', () => {
+      console.log('rect pointerup')
+    })
+    layer1.add(rect)
+
+    this.input.setTopOnly(false);
+
+    this.input.on('gameobjectdown', function (pointer, gameObject) {
+      // console.log(gameObject.name)
+    });
+  }
+</script>

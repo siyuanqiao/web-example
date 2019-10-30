@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.20.1/dist/phaser-arcade-physics.min.js"></script>
+<script src="./ScrollView.js"></script>
+<script>
+  var game = new Phaser.Game({
+    type: Phaser.AUTO,
+    transparent: true,
+    width: 640,
+    height: 500,
+    backgroundColor: 0x1099bb,
+    scene: {
+      preload: preload,
+      create: create
+    }
+  });
+
+  function preload() {
+    this.load.image('s1', './s1_0_0.jpg')
+  }
+
+  function create() {
+    let layer1 = this.add.container(0, 0)
+    layer1.name = 'layer1'
+    /*layer1.setInteractive({
+      hitArea: new Phaser.Geom.Rectangle(0, 0, 100, 100),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      cursor: "pointer",
+      useHandCursor: false
+    })
+    layer1.on('pointerup', () => {
+      console.log('layer1 pointerup')
+    })*/
+
+    // let rect = this.add.graphics().fillStyle(0xff0000, 1).fillRect(0, 0, 1000, 100)
+    let rect = this.add.image(0, 0, 's1').setOrigin(0, 0)
+    rect.name = 'rect'
+    /*rect.setInteractive(new Phaser.Geom.Rectangle(0, 0, 1000, 100), Phaser.Geom.Rectangle.Contains);
+    rect.on('pointerup', () => {
+      console.log('rect pointerup')
+    })*/
+    layer1.add(rect)
+
+    let scrollView = new ScrollView({
+      content: rect,
+      wrapperWidth: 640,
+      wrapperHeight: 100,
+      scrollerWidth: 1000,
+      scrollerHeight: 100,
+      onUpdate: () => {
+      },
+      onComplete: () => {
+      }
+    })
+  }
+</script>
