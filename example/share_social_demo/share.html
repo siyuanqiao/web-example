@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+    <title>分享到各社交平台</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .share-group{
+            width: 50px;
+        }
+        .share-group .icon-facebook{
+            background-position:0 0;
+        }
+        .share-group .icon-twitter{
+            background-position: 0 -50px;
+        }
+        .share-group .icon-weibo{
+            background-position:0 -100px;
+        }
+        .share-group .icon-linkedin{
+            background-position:0 -150px;
+        }
+        .share-group span[class|=icon]{
+            display: block;
+            width:50px;
+            height:50px;
+            /*border:1px solid red;*/
+            background-image: url('share-icon.png');
+            background-repeat: no-repeat;
+        }
+
+    </style>
+</head>
+<body>
+    分享链接是：www.baidu.com
+    <div class="share-group">
+        <a href="javascript:window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(document.location.href)+'&amp;t='+encodeURIComponent(document.title),'_blank');void(0)">
+            <span class="icon-facebook"></span>
+        </a>
+        <a href="javascript:window.open('http://twitter.com/home?status='+encodeURIComponent(document.location.href)+' '+encodeURIComponent(document.title),'_blank');void(0)">
+            <span class="icon-twitter"></span>
+        </a>
+        <a href="javascript:window.open('http://service.weibo.com/share/share.php?appkey=&title='+encodeURIComponent(document.title)+'&url='+encodeURIComponent(document.location.href)+'&pic=&searchPic=false&style=simple','_blank');void(0)">
+            <span class="icon-weibo"></span>
+        </a>
+        <a href="javascript:window.open('http://www.linkedin.com/shareArticle?mini=true&url='+encodeURIComponent(document.location.href)+'&title='+encodeURIComponent(document.title)+'&source='+encodeURIComponent(document.location.href),'_blank');void(0)">
+            <span class="icon-linkedin"></span>
+        </a>
+    </div>
+</body>
+</html>
