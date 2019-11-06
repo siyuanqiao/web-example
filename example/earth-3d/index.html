@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!-- 忽略页面中的数字识别为电话 -->
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="author" content="weibin.zeng@180china.com">
+    <style>
+        body{margin:0;}
+        canvas{position:absolute;top:0;left:0;z-index:0;}
+
+        .submenu{position:absolute;top:0px;right:0em;z-index:1;width:auto;height:auto;margin:0;padding:5px;background-color:rgba(200,200,200,0.5);color:white;}
+        .submenu li{display:block;min-width:60px;background-color:#ccc;padding:5px 5px;margin:0 0 3px 0;text-align: center;font-size:12px;cursor: pointer;}
+
+        /*.nav .nav-btn{display:block;width:20px;padding:5px;border:1px solid white;margin-left:-52px;}
+        .nav .nav-btn span{display:block;width:20px;height:2px;background-color:white;margin-bottom:4px;}
+        .nav .nav-btn span:last-child{margin-bottom:0px;}
+        .nav .submenu{position:absolute;top:0px;left:0px;margin:0;padding:0;}
+        .nav .show{position:absolute;top:0px;left:0px;margin:0;padding:0;}
+        .nav li{display:block;min-width:60px;background-color:#828d94;padding:5px 5px;margin:0 0 3px 0;text-align: center;font-size:12px;cursor: pointer;}
+        .roll-out{right: 85px;}
+        .roll-out .nav-btn{display:none;}*/
+
+
+    </style>
+    <script id="vertexShaderAtmosphere" type="x-shader/x-vertex">
+        varying vec3 vNormal;
+        void main()
+        {
+            vNormal = normalize( normalMatrix * normal );
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }
+    </script>
+    <script id="fragmentShaderAtmosphere" type="x-shader/x-vertex">
+        uniform float c;
+        uniform float p;
+        varying vec3 vNormal;
+        void main()
+        {
+            float intensity = pow( c - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) ), p );
+            gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;
+        }
+    </script>
+
+
+
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+
+			uniform float time;
+			uniform vec2 resolution;
+
+			uniform float fogDensity;
+			uniform vec3 fogColor;
+
+			uniform sampler2D texture1;
+			uniform sampler2D texture2;
+
+			varying vec2 vUv;
+
+			void main( void ) {
+
+				vec2 position = -1.0 + 2.0 * vUv;
+
+				vec4 noise = texture2D( texture1, vUv );
+				vec2 T1 = vUv + vec2( 1.5, -1.5 ) * time  *0.02;
+				vec2 T2 = vUv + vec2( -0.5, 2.0 ) * time * 0.01;
+
+				T1.x += noise.x * 2.0;
+				T1.y += noise.y * 2.0;
+				T2.x -= noise.y * 0.2;
+				T2.y += noise.z * 0.2;
+
+				float p = texture2D( texture1, T1 * 2.0 ).a;
+
+				vec4 color = texture2D( texture2, T2 * 2.0 );
+				vec4 temp = color * ( vec4( p, p, p, p ) * 2.0 ) + ( color * color - 0.1 );
+
+				if( temp.r > 1.0 ){ temp.bg += clamp( temp.r - 2.0, 0.0, 100.0 ); }
+				if( temp.g > 1.0 ){ temp.rb += temp.g - 1.0; }
+				if( temp.b > 1.0 ){ temp.rg += temp.b - 1.0; }
+
+				gl_FragColor = temp;
+
+				float depth = gl_FragCoord.z / gl_FragCoord.w;
+				const float LOG2 = 1.442695;
+				float fogFactor = exp2( - fogDensity * fogDensity * depth * depth * LOG2 );
+				fogFactor = 1.0 - clamp( fogFactor, 0.0, 1.0 );
+
+				gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );
+
+			}
+
+		</script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+
+			uniform vec2 uvScale;
+			varying vec2 vUv;
+
+			void main()
+			{
+
+				vUv = uvScale * uv;
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_Position = projectionMatrix * mvPosition;
+
+			}
+
+		</script>
+
+
+    <title>earth-3d</title>
+</head>
+<body>
+
+    <ul class="submenu"></ul>
+</body>
+</html>
+
+<script src="libs/jquery.min.js"></script>
+<!--<script src="libs/TweenMax.min.js"></script>-->
+<script src="libs/tween.min.js"></script>
+<script src="libs/three.min.js"></script>
+<script src="libs/OrbitControls.js"></script>
+
+<!--<script src="src/CanvasTexture.js"></script>-->
+<script src="src/documentReady.js"></script>
+<script src="src/Util.js"></script>
+<script src="src/main.js"></script>

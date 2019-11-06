@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>视察特效</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    html, body {
+      background: #fff;
+      height: 100%;
+
+      text-size-adjust: none;
+      -webkit-text-size-adjust: none;
+
+      user-select: none;
+      -webkit-user-select: none;
+
+      tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: transparent;
+
+      -ms-touch-action: none;
+    }
+
+    .pixi-player {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    .pixi-view {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+
+    #a, #b, #c {
+      position: absolute;
+      left: 0;
+      font-size: 32px;
+    }
+  </style>
+</head>
+<body>
+<div class="pixi-player touch-off" id="pixi_player">
+  <canvas class="pixi-view" id="pixi_view"></canvas>
+</div>
+<p id="a" style="top:0px;">a</p>
+<p id="b" style="top:100px;">a</p>
+<p id="c" style="top:200px;">a</p>
+
+<script src="../../assets/lib/pixi/pixi-4.5.1.min.js"></script>
+<script src="./main.js"></script>
+</body>
+</html>

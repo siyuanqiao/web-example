@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!-- 忽略页面中的数字识别为电话 -->
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="author" content="weibin.zeng@180china.com">
+    <style>
+        body{margin:0;}
+    </style>
+    <title>earth-3d</title>
+</head>
+<body>
+</body>
+</html>
+<script src="libs/three.min.js"></script>
+<script src="libs/OrbitControls.js"></script>
+<script src="src/documentReady.js"></script>
+<script>
+    documentReady(function(){
+        var stageWidth=document.documentElement.clientWidth||document.body.clientWidth;
+        var stageHeight=document.documentElement.clientHeight||document.body.clientHeight;
+
+        var canvas,
+                renderer,
+                scene,
+                camera,
+                controls;
+
+        canvas=document.createElement("canvas");
+        canvas.width=stageWidth;
+        canvas.height=stageHeight;
+        document.body.appendChild(canvas);
+
+        renderer=new THREE.WebGLRenderer({
+            canvas:canvas
+        });
+
+        scene=new THREE.Scene();
+
+        camera=new THREE.PerspectiveCamera(45,stageWidth/stageHeight,0.5,1000);
+        camera.position.z=420;
+
+        controls=new THREE.OrbitControls(camera,renderer.domElement);
+        controls.dynamicDampingFactor=0.8;
+
+        var geometry = new THREE.BufferGeometry();
+        // create a simple square shape. We duplicate the top left and bottom right
+        // vertices because each vertex needs to appear once per triangle.
+        var vertexPositions = [
+            [-1.0, -1.0,  1.0],
+            [ 1.0, -1.0,  1.0],
+            [ 1.0,  1.0,  1.0],
+
+            [ 1.0,  1.0,  1.0],
+            [-1.0,  1.0,  1.0],
+            [-1.0, -1.0,  1.0]
+        ];
+        var vertices = new Float32Array( vertexPositions.length * 3 ); // three components per vertex
+
+        // components of the position vector for each vertex are stored
+        // contiguously in the buffer.
+        for ( var i = 0; i < vertexPositions.length; i++ )
+        {
+            vertices[ i*3 + 0 ] = vertexPositions[i][0];
+            vertices[ i*3 + 1 ] = vertexPositions[i][1];
+            vertices[ i*3 + 2 ] = vertexPositions[i][2];
+        }
+
+        // itemSize = 3 because there are 3 values (components) per vertex
+        geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+        var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+        var mesh = new THREE.Mesh( geometry, material );
+
+        scene.add(mesh);
+    });
+</script>

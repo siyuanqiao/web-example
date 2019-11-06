@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- saved from url=(0026)http://192.168.1.194/test/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>test</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="full-screen" content="true">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="360-fullscreen" content="true">
+    <style>
+        html, body {
+            -ms-touch-action: none;
+            background: #000;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+    </style>
+	<script src="../libs/three.min.js"></script>
+	<script src="../libs/OrbitControls.js"></script>
+</head>
+<body>
+<script>
+
+	var city = [
+		{
+			"name": "Beijing",
+			"lat": 39.9087150000,
+			"lon": 116.3973890000
+		},{
+			"name": "New York",
+			"lat": 40.7127837,
+			"lon": -74.0059413
+		},
+		{
+			"name": "London",
+			"lat": 51.5073509000,
+			"lon": -0.1277583000
+		}
+	]
+	var group, earth;
+	var w = document.body.clientWidth, h = document.body.clientHeight;
+	var camera = new THREE.PerspectiveCamera( 70, w / h, 1, 10000 );
+	camera.position.z = 500;
+	camera.lookAt(0, 0, 0);
+
+	var scene = new THREE.Scene();
+	var renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setSize( w, h );
+	document.body.appendChild( renderer.domElement );
+
+	function createItem(obj) {
+		var geometry = new THREE.Geometry();
+		geometry.vertices.push(new THREE.Vector3( 0, 0, 200 ));
+		geometry.vertices.push(new THREE.Vector3( 0, 0, 250 ));
+
+		var mc = new THREE.Group();
+
+		var line = new THREE.Line( geometry, new THREE.LineBasicMaterial({ color: 0xFFFFFF, linewidth: 1 }) );
+		mc.add( line );
+
+		var geo = new THREE.SphereGeometry( 5, 5, 5 );
+		var m = new THREE.Mesh( geo, new THREE.MeshBasicMaterial({ color: 0x00FF00 }) );
+		m.position.z = 200;
+		line.add(m);
+
+		line.rotation.x = -ang2rad(obj.lat);
+		mc.rotation.y = ang2rad(obj.lon);
+
+		return mc;
+	}
+	function init(){
+		group = new THREE.Group();
+		var loader = new THREE.TextureLoader();
+		loader.load( 'earth.jpg', function ( texture ) {
+			var geometry = new THREE.SphereGeometry( 200, 30, 30 );
+			var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+			earth = new THREE.Mesh( geometry, material );
+			earth.rotation.y = ang2rad(270);
+			group.add( earth );
+		} );
+
+		for(var i = 0; i < city.length; i++)
+		{
+			group.add(createItem(city[i]));
+		}
+		scene.add( group );
+
+		group.rotation.y = Math.PI / 180 * 220;
+	}
+	function ang2rad(value){
+		return Math.PI / 180 * value;
+	}
+	function render() {
+		if(group)
+		{
+			group.rotation.y += ang2rad(0.2);
+		}
+		requestAnimationFrame( render );
+		renderer.render( scene, camera );
+	}
+	init();
+	render();
+</script><canvas width="320" height="568" style="width: 320px; height: 568px;"></canvas>
+
+</body></html>
