@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>自动加载数据</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <head><h1 style="text-align: center;color:red;">title</h1></head>
+    <main style="height:800px;background-color: #eee;">main</main>
+    <footer>
+      <span>加载中</span>
+    </footer>
+    <script>
+      (function () {
+        function throuttle (fn, interval) {
+          let lastTime = new Date().valueOf();
+
+          return function () {
+            let now = new Date().valueOf()
+
+            if (now - lastTime > interval) {
+              lastTime = now
+              fn()
+            }
+          }
+        }
+
+        var onScrollListener = throuttle(() => {
+          if (onBottom()) console.log('拉到底部了')
+        }, 30)
+
+        var onBottom = function () {
+          var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+          var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+          var totalHeight = windowHeight + scrollTop
+
+          var bodyHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+
+          return bodyHeight - totalHeight <= 3
+        }
+
+        window.addEventListener('scroll', onScrollListener)
+        window.addEventListener('resize', onScrollListener)
+        document.addEventListener('touchend', onScrollListener)
+      }())
+    </script>
+  </body>
+</html>
