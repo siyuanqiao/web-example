@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
+    <title>transitionend - 蜗牛博客(wnworld.com)</title>
+    <link rel="stylesheet" type="text/css" href="http://wnworld.com/wp-content/themes/temp1/css/reset.css">
+</head>
+<body>
+<style type="text/css">
+    .movebox{
+        width:50px;
+        height:50px;
+        position: relative;
+        background:#f60;
+        -webkit-transition-duration: 1s;
+        -o-transition-duration: 1s;
+        transition-duration: 1s;
+        -webkit-transition-timing-function: linear;
+        -o-transition-timing-function: linear;
+        transition-timing-function: linear;
+    }
+</style>
+
+
+<div class="movebox" id="J_movebox"></div>
+<div class="handguide-btn fixed align-c ">
+    <a href="javascript:void(0)" class="wn-btn wn-btn-success" id="J_movingbtn">&nbsp;&nbsp;运动&nbsp;&nbsp; </a>
+    <a href="javascript:void(0)" class="wn-btn wn-btn-success" id="J_returnbeginbtn">&nbsp;&nbsp;恢复&nbsp;&nbsp; </a>
+</div>
+<script type="text/javascript">
+    var movebox=document.getElementById("J_movebox"),
+            btn=document.getElementById("J_movingbtn"),
+            returnbeginbtn=document.getElementById("J_returnbeginbtn"),
+            i=0,
+            transition="transition",
+            body=document.body || document.documentElement,
+            style=body.style;
+    var	transitionEnd=(function(){
+        var transEndEventNames = {
+            WebkitTransition : 'webkitTransitionEnd',
+            MozTransition    : 'transitionend',
+            OTransition      : 'oTransitionEnd otransitionend',
+            transition       : 'transitionend'
+        }
+        for(var name in transEndEventNames){
+            if(typeof style[name] === "string"){
+                return transEndEventNames[name]
+            }
+        }
+    })();
+
+    var vendorPrefix=(function(){
+        var i=0, vendor=["Moz", "Webkit", "Khtml", "O", "ms"];
+        transition=transition.charAt(0).toUpperCase() + transition.substr(1);
+        while (i < vendor.length) {
+            if (typeof style[vendor[i] + transition] === "string") {
+                return vendor[i];
+            }
+            i++;
+        }
+        return false;
+    })();
+
+    var called=false;
+    var handleTransitionEndEvent=function(elem,fn,duration){
+        //在每次transitionEnd的事件后执行该函数
+        var callback = function(){
+            if (!called){
+                fn();
+                called=true;
+            }
+        };
+        elem.addEventListener(transitionEnd,function(){
+            callback();
+            setTimeout(callback,duration);
+        },false);
+    };
+    function transitionEndFn(){
+        i++;
+        alert("执行了"+transitionEnd+"事件"+i+"次");
+    };
+    handleTransitionEndEvent(movebox,transitionEndFn,"1s");
+    btn.onclick=function(){
+        i=0;
+        called=false;
+        movebox.style.width="150px";
+        movebox.style.height="150px";
+        movebox.style.backgroundColor="#000";
+        movebox.style[vendorPrefix+"Transform"]="translate(100px,100px) rotate(45deg)";
+        movebox.style[vendorPrefix+"TransitionProperty"]="width,height,background-color,transform";
+    }
+    returnbeginbtn.onclick=function(){
+        i=0;
+        called=false;
+        movebox.style.width="50px";
+        movebox.style.height="50px";
+        movebox.style.backgroundColor="#f60";
+        movebox.style[vendorPrefix+"Transform"]="translate(0px,0px) rotate(0deg)";
+        movebox.style[vendorPrefix+"TransitionProperty"]="width,height,background-color,transform";
+    }
+</script>
+</body>
+</html>

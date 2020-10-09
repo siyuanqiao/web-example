@@ -1,0 +1,19 @@
+body{
+    -webkit-tap-highlight-color:transparent;-webkit-touch-callout: none;
+}
+canvas{
+    -webkit-tap-highlight-color:transparent;-webkit-touch-callout: none;
+    display: block;
+    margin: 0 auto;
+    /*box-shadow:  -2px -2px 2px #efefef,5px 5px 5px #b9b9b9;*/
+}
+*{margin: 0;padding: 0}
+#wrap{
+    position: absolute;
+    width: 640px;
+    left: 50%;
+    margin-left: -320px;
+    padding-top: 20px;
+    min-width: 640px;
+    min-height: 680px;
+}

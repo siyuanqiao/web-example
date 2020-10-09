@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    var Detec=(function(global){
+        return{
+            cons:function DetectorBase(configs){
+                if (!this instanceof DetectorBase) {
+                    throw new Error('Do not invoke without new.')
+                }
+                this.configs=configs;
+                this.analyze();
+            }
+        }
+    })(this);
+    Detec.cons.prototype.analyze=function(){
+        console.log('Analyzing...');
+        this.data="##data##";
+    };
+    Detec.cons.prototype.detect=function () {
+        throw new Error('Not implemented');
+    };
+    function LinkDetector(links){
+        if (!this instanceof LinkDetector) {
+            throw new Error('Do not invoke without new.')
+        }
+        this.links=links;
+        Detec.cons.apply(this,arguments);
+    }
+    function ContainerDetector(containers){
+        if (!this instanceof ContainerDetector) {
+            throw new Error('Do not invoke without new.')
+        }
+        this.containers=containers;
+        Detec.cons.apply(this,arguments);
+    }
+    function inherit(subClass,superClass){
+        subClass.prototype=Object.create(superClass.prototype);
+        subClass.prototype.cons=subClass;
+    }
+    inherit(LinkDetector,Detec.cons);
+    inherit(ContainerDetector,Detec.cons);
+    LinkDetector.prototype.detect=function(){
+        //console.log(this);
+        //alert(this instanceof LinkDetector);
+        console.log('Loading data:'+this.data);
+        console.log('link detection started.');
+        console.log('Scaning link:'+this.links);
+    };
+    ContainerDetector.prototype.detect=function(){
+        console.log('Loading data:'+this.data);
+        console.log('Container detection started.');
+        console.log('Scaning containers:'+this.containers);
+    };
+    Object.defineProperties(this,{
+        LinkDetector:{value:LinkDetector},
+        ContainerDetector:{value:ContainerDetector},
+        DetectorBase:{value:Detec.cons}
+    });
+    var a=new ContainerDetector('#abc');
+    var b=new LinkDetector('http://www.baidu.com');
+
+    a.detect();
+    b.detect();
+</script>
+</body>
+</html>
